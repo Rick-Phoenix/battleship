@@ -1,0 +1,42 @@
+body {
+  box-sizing: border-box;
+}
+
+div.wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+div.board {
+  height: 300px;
+  width: 300px;
+  border: 1px solid black;
+  display: grid;
+  grid: repeat(10, 10%) / repeat(10, 10%);
+}
+
+div.cell {
+  border: 1px solid black;
+  position: relative;
+}
+
+div.cell:hover {
+  background-color: aqua;
+}
+
+div.cell:nth-child(-n + 10)::before {
+  content: var(--col);
+  position: absolute;
+  top: -100%;
+  left: calc(50% - (1ch / 2));
+}
+
+div.cell:nth-child(10n + 1)::after {
+  content: var(--row);
+  position: absolute;
+  left: -70%;
+  top: calc(50% - 1ch);
+}
