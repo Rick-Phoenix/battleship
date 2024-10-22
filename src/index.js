@@ -1,19 +1,37 @@
 import "./Styles/styles.css";
 import * as nodes from "./Modules/selectors";
-import { createElement, populateBoard } from "./Modules/functions";
+import { createElement, populateBoard, reset } from "./Modules/functions";
+
+let cells; 
+let cellData;
 
 document.addEventListener('DOMContentLoaded', (e) => {
-  populateBoard(nodes.board)
+  populateBoard(nodes.board);
+  cells = Array.from(document.querySelectorAll('.cell'));
+  cellsCalc()
+  cellTest()
 });
 
-nodes.draggable.addEventListener('click', () => {
-  window.addEventListener('mousemove', (e) => {
-    nodes.draggable.style.position = 'absolute';
-    console.log(e.clientY);
-    nodes.draggable.style.top = `${e.clientY}px`;
-    nodes.draggable.style.left = `${e.clientX}px`;
-  })
-})
+function cellsCalc() {
+  const arr = [];
+  for (let i = 0; i < cells.length; i++) {
+    const cellSquare = cells[i].getBoundingClientRect();
+    arr[i] = {
+      cellCount: i,
+      left: cellSquare.left,
+      right: cellSquare.right,
+      top: cellSquare.top,
+      bottom: cellSquare.bottom
+    }
+  }
+
+  cellData = arr;
+}
+
+function cellTest() {
+  const n = 400
+  cellData.forEach((cell) => cell.right < n ? console.log(cell):null)
+}
 
 class Ship {
   constructor(length, name, coordinates) {

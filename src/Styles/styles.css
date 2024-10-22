@@ -11,8 +11,8 @@ div.wrapper {
 }
 
 div.board {
-  height: 300px;
-  width: 300px;
+  height: 400px;
+  width: 400px;
   border: 1px solid black;
   display: grid;
   grid: repeat(10, 10%) / repeat(10, 10%);
@@ -23,8 +23,8 @@ div.cell {
   position: relative;
 }
 
-div.cell:hover {
-  background-color: aqua;
+div.cell.hover-effect {
+  background-color: aquamarine;
 }
 
 div.cell:nth-child(-n + 10)::before {
