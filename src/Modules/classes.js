@@ -1,9 +1,17 @@
 export class Ship {
-  constructor(length, name, coordinates) {
-    this.length = length;
+  constructor(type, coordinates) {
+    let shipTable = {
+      car: {name: 'Aircraft Carrier', length: 5},
+      bat: {name: 'Battleship', length: 4},
+      sub: {name: 'Submarine', length: 3},
+      cru: {name: 'Cruiser', length: 3},
+      des: {name: 'Destroyer', length: 2},
+    }
+
+    this.length = shipTable[type]['length'];
+    this.name = shipTable[type]['name'];
     this.hits = 0;
     this.sunk = false;
-    this.name = name;
     this.coordinates = coordinates;
   }
 

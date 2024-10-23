@@ -1,5 +1,5 @@
+import { Ship } from "./classes";
 import * as nodes from "./selectors"
-import carrier from "../Images/car-hor.png"
 
 export function createElement(type, ...classes) {
   const newElement = document.createElement(type);
@@ -34,14 +34,17 @@ export function populateBoard(target) {
 
 
 
-export function placeShip(element, location, cells) {
+export function placeShip(element, type, location, cells) {
+  const ship = new Ship(type, null);
+
   element.onmousedown = dragShip;
   element.onmouseover = changeCursor;
   let shipAngle = 0;
   
   const shipImg = new Image();
-  shipImg.classList.add('gameIcon');
+  shipImg.classList.add('gameIcon', type);
   shipImg.src = location;
+  shipImg.style.width = `${50 * ship.length}px`
 
   function changeCursor(e) {
     element.style.cursor = 'grab';
@@ -56,6 +59,7 @@ export function placeShip(element, location, cells) {
   }
 
   function closeDrag() {
+    console.log(element.getBoundingClientRect());
     nodes.dialog.close();
     nodes.main.prepend(nodes.board)
     document.onmouseup = null;
@@ -91,16 +95,20 @@ export function placeShip(element, location, cells) {
 
     
     
-    function isOverlapping(rect1, rect2) {
-      return !(rect1.right < rect2.left || 
-        rect1.top > rect2.bottom || 
-        rect1.left > rect2.right || 
-        rect1.bottom < rect2.top || 
-        rect1.bottom > rect2.top && 
-        rect1.top < rect2.top);
-    }
   }
+
+
+
 }
+
+// export function isOverlapping(rect1, rect2) {
+//   return !(rect1.right < rect2.left || 
+//     rect1.top > rect2.bottom || 
+//     rect1.left > rect2.right || 
+//     rect1.bottom < rect2.top || 
+//     rect1.bottom > rect2.top && 
+//     rect1.top < rect2.top);
+// }
 
 export function cellsCalc() {
   const cells = Array.from(document.querySelectorAll('.cell'));
