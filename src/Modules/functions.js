@@ -36,9 +36,12 @@ export function populateBoard(target) {
 
 export function placeShip(element, location) {
   element.onmousedown = dragShip;
+  let shipAngle = 0;
 
   function dragShip(e) {
     e.preventDefault();
+    document.onmousemove = dragMove
+    document.onclick = closeDrag
     nodes.dialog.append(nodes.board);
     const test = new Image();
     test.className = 'car';
@@ -47,12 +50,20 @@ export function placeShip(element, location) {
     nodes.dialog.showModal();
     const dialogRect = nodes.dialog.getBoundingClientRect();
     const shipRect = test.getBoundingClientRect();
+    document.onkeyup = rotateShip;
 
-    document.onmousemove = dragMove
-    document.onmouseup = closeDrag
+    
+    function rotateShip(e) {
+      console.log(e);
+      console.log(shipRect);
+      if (e.key == 'q') {
+        test.style.transform = `rotate(${shipAngle - 45}deg)`;
+        shipAngle -= 45 % 360;
+        if (shipAngle === -90) shipAngle = 45;
+      };
+    }
 
     function dragMove(e) {
-      console.log(shipRect);
       const mouseX = e.clientX;
       const mouseY = e.clientY;
       test.style.position = 'absolute';
@@ -65,6 +76,7 @@ export function placeShip(element, location) {
       nodes.main.prepend(nodes.board)
       document.onmouseup = null;
       document.onmousemove = null;
+      document.removeEventListener('onkeypress', rotateShip)
     }
     
     function isOverlapping(rect1, rect2) {

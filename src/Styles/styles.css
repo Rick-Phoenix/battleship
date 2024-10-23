@@ -16,6 +16,7 @@ div.board {
   border: 1px solid black;
   display: grid;
   grid: repeat(10, 10%) / repeat(10, 10%);
+  position: relative;
 }
 
 div.cell {
@@ -50,6 +51,3 @@ img.car {
   height: 30px;
 }
 
-dialog {
-  position: relative;
-}

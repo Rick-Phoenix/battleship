@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
   populateBoard(nodes.board);
   cellsCalc()
   const ship = document.querySelector('img.ship');
-  console.log(images);
   placeShip(ship, images['car-hor.png']);
 });
 
