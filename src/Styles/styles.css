@@ -46,7 +46,13 @@ img.ship {
   width: 100px;
 }
 
-img.car {
+dialog {
+  overflow: hidden;
+  cursor: grabbing;
+  padding: 15px;
+}
+
+img.gameIcon {
   width: 90px;
   height: 30px;
 }

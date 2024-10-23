@@ -36,49 +36,60 @@ export function populateBoard(target) {
 
 export function placeShip(element, location, cells) {
   element.onmousedown = dragShip;
+  element.onmouseover = changeCursor;
   let shipAngle = 0;
+  
+  const shipImg = new Image();
+  shipImg.classList.add('gameIcon');
+  shipImg.src = location;
+
+  function changeCursor(e) {
+    element.style.cursor = 'grab';
+  }
+
+  function rotateShip(e) {
+    if (e.key == 'q') {
+      shipImg.style.transform = `rotate(${shipAngle - 45}deg)`;
+      shipAngle -= 45 % 360;
+      if (shipAngle === -90) shipAngle = 45;
+    };
+  }
+
+  function closeDrag() {
+    nodes.dialog.close();
+    nodes.main.prepend(nodes.board)
+    document.onmouseup = null;
+    document.onmousemove = null;
+    document.removeEventListener('onkeypress', rotateShip);
+    element.style.opacity = '0.5';
+    element.onmousedown = null;
+    element.onmouseover = null;
+    element.style.cursor = 'auto';
+  }
 
   function dragShip(e) {
     e.preventDefault();
     document.onmousemove = dragMove
-    document.onclick = closeDrag
+    document.onmouseup = closeDrag;
+    
+    nodes.board.append(shipImg);
     nodes.dialog.append(nodes.board);
-    const test = new Image();
-    test.className = 'car';
-    test.src = location;
-    nodes.board.append(test);
     nodes.dialog.showModal();
-    const dialogRect = nodes.dialog.getBoundingClientRect();
-    const shipRect = test.getBoundingClientRect();
+    nodes.dialog.focus();
+    const shipRect = shipImg.getBoundingClientRect();
+    const boardRect = nodes.board.getBoundingClientRect();
     document.onkeyup = rotateShip;
 
     
-    function rotateShip(e) {
-      console.log(shipRect);
-      if (e.key == 'q') {
-        test.style.transform = `rotate(${shipAngle - 45}deg)`;
-        shipAngle -= 45 % 360;
-        if (shipAngle === -90) shipAngle = 45;
-      };
-    }
-
     function dragMove(e) {
       const mouseX = e.clientX;
       const mouseY = e.clientY;
-      test.style.position = 'absolute';
-      test.style.top = `${mouseY - dialogRect.top - shipRect.height}px`;
-      test.style.left = `${mouseX - dialogRect.left}px`;
+      shipImg.style.position = 'absolute';
+      shipImg.style.top = `${mouseY - boardRect.top - shipRect.height + 15}px`;
+      shipImg.style.left = `${mouseX - boardRect.left - (shipRect.width / 2)}px`;
     }
 
-    function closeDrag() {
-      nodes.dialog.close();
-      nodes.main.prepend(nodes.board)
-      document.onmouseup = null;
-      document.onmousemove = null;
-      document.removeEventListener('onkeypress', rotateShip);
-      element.style.opacity = '0.5';
-      element.onmousedown = null;
-    }
+    
     
     function isOverlapping(rect1, rect2) {
       return !(rect1.right < rect2.left || 
