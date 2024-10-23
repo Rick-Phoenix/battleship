@@ -1,18 +1,21 @@
 import "./Styles/styles.css";
 import * as nodes from "./Modules/selectors";
-import { createElement, populateBoard, reset } from "./Modules/functions";
+import { createElement, populateBoard, placeShip, getImages, } from "./Modules/functions";
 
 let cells; 
 let cellData;
+const images = getImages()
 
 document.addEventListener('DOMContentLoaded', (e) => {
   populateBoard(nodes.board);
-  cells = Array.from(document.querySelectorAll('.cell'));
   cellsCalc()
-  cellTest()
+  const ship = document.querySelector('img.ship');
+  placeShip(ship);
 });
 
+
 function cellsCalc() {
+  cells = Array.from(document.querySelectorAll('.cell'));
   const arr = [];
   for (let i = 0; i < cells.length; i++) {
     const cellSquare = cells[i].getBoundingClientRect();
@@ -28,35 +31,4 @@ function cellsCalc() {
   cellData = arr;
 }
 
-function cellTest() {
-  const n = 400
-  cellData.forEach((cell) => cell.right < n ? console.log(cell):null)
-}
 
-class Ship {
-  constructor(length, name, coordinates) {
-    this.length = length;
-    this.hits = 0;
-    this.sunk = false;
-    this.name = name;
-    this.coordinates = coordinates;
-  }
-
-  hit() {
-    this.hits++;
-  }
-
-  isSunk() {
-    if (this.hits === this.length) this.sunk = true;
-  }
-
-}
-
-class GameBoard {
-  constructor() {
-    this.rows = [0,1,2,3,4,5,6,7,8,9];
-    this.columns = [0,1,2,3,4,5,6,7,8,9];
-  }
-
-
-}

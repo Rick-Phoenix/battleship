@@ -1,4 +1,5 @@
 import * as nodes from "./selectors"
+import carrier from "../Images/car-hor.png"
 
 export function createElement(type, ...classes) {
   const newElement = document.createElement(type);
@@ -6,6 +7,17 @@ export function createElement(type, ...classes) {
 
   return newElement;
 }
+
+export function getImages(index) {
+  index = require.context('../Images', false, /\.(png|jpe?g|svg)$/);
+  let imagesObj = {};
+  index.keys().forEach((key) => {
+    imagesObj[key.replace('./', '')] = index(key)
+  });
+  return imagesObj;
+}
+
+
 
 export function populateBoard(target) {
   for (let i = 0; i < 100; i++) {
@@ -20,38 +32,40 @@ export function populateBoard(target) {
   }
 }
 
-export function placeShip() {
-  nodes.draggable.onmousedown
 
 
+export function placeShip(element) {
+  element.onmousedown = dragShip;
 
-  function onMouseDown() {
-    nodes.draggable.addEventListener('mousedown', () => {
-  
-      nodes.draggable.addEventListener('mousemove', (e) => {
-        const height = e.target.clientHeight;
-        const width = e.target.clientWidth;
-        const cells = document.querySelectorAll('.cell');
-        window.addEventListener('mousemove', (e) => {
-          nodes.draggable.style.position = 'absolute';
-          const top = e.clientY - height;
-          const left = e.clientX - width;
-          nodes.draggable.style.top = `${top}px`;
-          nodes.draggable.style.left = `${left}px`;
-          const draggableRect = nodes.draggable.getBoundingClientRect();
-        })
-      })
-    
-      document.onmouseup = function reset() {
-        console.log('1');
-        document.onmousemove = null;
-        window.onmousemove = null;
-        nodes.draggable.onmousemove = null;
-        console.log(window.onmousemove);
-      }
-    })
-    
-    
+  function dragShip(e) {
+    e.preventDefault();
+    nodes.dialog.append(nodes.board);
+    const test = new Image();
+    test.className = 'shipDrag';
+    test.src = carrier;
+    nodes.board.append(test);
+    nodes.dialog.showModal();
+    const dialogRect = nodes.dialog.getBoundingClientRect();
+    const shipRect = test.getBoundingClientRect();
+
+    document.onmousemove = dragMove
+    document.onmouseup = closeDrag
+
+    function dragMove(e) {
+      console.log(shipRect);
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      test.style.position = 'absolute';
+      test.style.top = `${mouseY - dialogRect.top - shipRect.height}px`;
+      test.style.left = `${mouseX - dialogRect.left}px`;
+    }
+
+    function closeDrag() {
+      nodes.dialog.close();
+      nodes.main.prepend(nodes.board)
+      document.onmouseup = null;
+      document.onmousemove = null;
+    }
     
     function isOverlapping(rect1, rect2) {
       return !(rect1.right < rect2.left || rect1.top > rect2.bottom || rect1.left > rect2.right || rect1.bottom < rect2.top || rect1.bottom > rect2.top && rect1.top < rect2.top);

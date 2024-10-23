@@ -2,7 +2,7 @@ body {
   box-sizing: border-box;
 }
 
-div.wrapper {
+main {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -42,5 +42,14 @@ div.cell:nth-child(10n + 1)::after {
 }
 
 img.ship {
-  height: 100px;
+  width: 100px;
+}
+
+img.shipDrag {
+  width: 90px;
+  height: 30px;
+}
+
+dialog {
+  position: relative;
 }
