@@ -34,15 +34,15 @@ export function populateBoard(target) {
 
 
 
-export function placeShip(element) {
+export function placeShip(element, location) {
   element.onmousedown = dragShip;
 
   function dragShip(e) {
     e.preventDefault();
     nodes.dialog.append(nodes.board);
     const test = new Image();
-    test.className = 'shipDrag';
-    test.src = carrier;
+    test.className = 'car';
+    test.src = location;
     nodes.board.append(test);
     nodes.dialog.showModal();
     const dialogRect = nodes.dialog.getBoundingClientRect();

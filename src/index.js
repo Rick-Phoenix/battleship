@@ -4,13 +4,14 @@ import { createElement, populateBoard, placeShip, getImages, } from "./Modules/f
 
 let cells; 
 let cellData;
-const images = getImages()
+const images = getImages();
 
 document.addEventListener('DOMContentLoaded', (e) => {
   populateBoard(nodes.board);
   cellsCalc()
   const ship = document.querySelector('img.ship');
-  placeShip(ship);
+  console.log(images);
+  placeShip(ship, images['car-hor.png']);
 });
 
 
