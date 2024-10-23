@@ -40,3 +40,7 @@ div.cell:nth-child(10n + 1)::after {
   left: -70%;
   top: calc(50% - 1ch);
 }
+
+img.ship {
+  height: 100px;
+}
