@@ -54,5 +54,18 @@ dialog {
 
 img.gameIcon {
   aspect-ratio: initial;
+  width: 100px;
 }
 
+.gameIcon.car {
+  width: 210px;
+}
+
+.gameIcon.bat {
+  width: 170px;
+}
+
+.gameIcon.sub,
+.gameIcon.cru {
+  width: 145px;
+}

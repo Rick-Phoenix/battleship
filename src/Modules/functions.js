@@ -46,7 +46,6 @@ export function placeShip(element, type, location, cells) {
   const shipImg = new Image();
   shipImg.classList.add('gameIcon', type);
   shipImg.src = location;
-  shipImg.style.width = `${50 * ship.length}px`
 
   function changeCursor(e) {
     element.style.cursor = 'grab';
@@ -54,11 +53,21 @@ export function placeShip(element, type, location, cells) {
 
   function rotateShip(e) {
     if (e.key == 'q') {
-      shipImg.style.transform = `rotate(${shipAngle - 45}deg)`;
-      shipAngle -= 45 % 360;
-      if (shipAngle === -90) shipAngle = 45;
+      if (shipAngle === 0) {
+        shipImg.style.transform = `rotate(${shipAngle - 90}deg)`;
+        shipAngle -= 90;
+        dragMove(e)
+        return;
+      }
+      
+      if (shipAngle === -90) {
+        shipImg.style.transform = `rotate(${0}deg)`;
+        shipAngle = 0;
+        dragMove(e)
+      }
     };
-    dragMove(e)
+
+    
   }
 
   function closeDrag(e) {
@@ -75,59 +84,89 @@ export function placeShip(element, type, location, cells) {
 
   function dragShip(e) {
     e.preventDefault();
-    document.onmousemove = dragMove
+    document.onmousemove = dragMove;
     document.onmouseup = closeDrag;
     
     nodes.board.append(shipImg);
     nodes.dialog.append(nodes.board);
     nodes.dialog.showModal();
     nodes.dialog.focus();
+    shipImg.style.position = 'absolute';
     document.onkeyup = rotateShip;
   }
 
   function dragMove(e) {
     const boardRect = nodes.board.getBoundingClientRect();
-    const shipRect = shipImg.getBoundingClientRect();
-    mouseX = e.clientX || mouseX;
-    mouseY = e.clientY || mouseY;
-    shipImg.style.position = 'absolute';
+    let shipRect = shipImg.getBoundingClientRect();
+    mouseX = e.clientX || mouseX
+    mouseY = e.clientY || mouseY
+
     if (shipAngle === 0) {
-      shipImg.style.top = `${mouseY - boardRect.top - (shipRect.height / 2) - 15}px`;
-      shipImg.style.left = `${mouseX - boardRect.left}px`;
+      console.log(shipRect);
+      let newTop = mouseY - boardRect.top - (shipRect.height / 2) - 15;
+      newTop = Math.max(0, newTop);
+      newTop = Math.min(newTop, boardRect.height - shipRect.height);
+
+      let newLeft = mouseX - boardRect.left - 15;
+      newLeft = Math.max(0, newLeft);
+      newLeft = Math.min(newLeft, boardRect.width - shipRect.width - 1);
+      shipImg.style.top = `${newTop}px`;
+      shipImg.style.left = `${newLeft}px`;
     }
 
-    if (shipAngle === -45) {
-      shipImg.style.top = `${mouseY - boardRect.top - (shipRect.height / 2) - 15}px`;
-      shipImg.style.left = `${mouseX - boardRect.left - (shipRect.width / 4)}px`;
+    if (shipAngle === -90) {
+      let newRect = shipImg.getBoundingClientRect()
+      const offset = newRect.height / 2 - newRect.width / 2;
+      let newTop = mouseY - boardRect.top - (newRect.height / 2);
+
+      newTop = Math.max(offset, newTop);
+      newTop = Math.min(newTop, boardRect.bottom - boardRect.top + offset - newRect.height);
+
+      let newLeft = mouseX - boardRect.left - (shipRect.height / 2) - 15;
+      newLeft = Math.max(newLeft, -offset);
+      newLeft = Math.min(newLeft, boardRect.right - boardRect.left - offset - newRect.width);
+      shipImg.style.top = `${newTop}px`;
+      shipImg.style.left = `${newLeft}px`;
     }
     
-    if (shipAngle === 45) {
-      shipImg.style.top = `${mouseY - boardRect.top - (shipRect.height / 2) - 15}px`;
-      shipImg.style.left = `${mouseX - boardRect.left - (shipRect.width * 2.5)}px`;
-    }
 
     let column = Math.floor(((mouseX - boardRect.left + 1) / boardRect.width) * 10); 
     let row = Math.floor(((mouseY - boardRect.top + 1) / boardRect.height) * 10); 
-    console.log(row);
-    console.log(column);
+    sortingAlgo(column,row)
 
-    function sortingAlgo(e, cells) {
-      let column;
-      let row;
+    function sortingAlgo(startColumn, startRow) {
+      if (startColumn < 0) startColumn = 0;
+      if (startRow < 0) startRow = 0;
+      if (startRow > 9) startRow = 9;
+      cells.rows.forEach((row) => row.forEach((cell) => cell.node.classList.remove('hover-effect')));
+      let targetCells;
+      if (shipAngle === 0) {
+        if (startColumn + ship.length > 9) startColumn = 10 - ship.length;
+        const row = cells.rows[startRow]
+        if (row) {
+          targetCells = row.slice(startColumn, startColumn + ship.length);
+          for (let cell of targetCells) {
+            cell.node.classList.add('hover-effect')
+          }
+        }
+      }
+
+      if (shipAngle === -90) {
+        if (startRow - ship.length < 0) startRow = ship.length - 1;
+        if (startColumn > 9) startColumn = 9;
+        const column = cells.columns[startColumn]
+        if (column) {
+          targetCells = column.slice(startRow - ship.length + 1, startRow + 1);
+          for (let cell of targetCells) {
+            cell.node.classList.add('hover-effect')
+          }
+        }
+      }
 
     }
   }
 
 }
-
-// export function isOverlapping(rect1, rect2) {
-//   return !(rect1.right < rect2.left || 
-//     rect1.top > rect2.bottom || 
-//     rect1.left > rect2.right || 
-//     rect1.bottom < rect2.top || 
-//     rect1.bottom > rect2.top && 
-//     rect1.top < rect2.top);
-// }
 
 export function cellsCalc() {
   const cells = Array.from(document.querySelectorAll('.cell'));
