@@ -14,35 +14,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     placeShip(ship, shipType, images[`${shipType}-hor.png`], cells)
   });
   console.log(cells);
-  console.log(sortingAlgo(cells));
 
 });
-
-function sortingAlgo(cells) {
-  let mockRect = {
-    top: 346,
-    bottom: 446,
-    left: 313,
-    right: 413
-  }
-
-  let toHighlight = [cells.filter((quadrant) => {
-    if (quadrant.left < mockRect.left &&
-      quadrant.right > mockRect.right &&
-      quadrant.top < mockRect.top &&
-      quadrant.bottom > mockRect.bottom
-    ) return true;
-
-  })];
-
-  return toHighlight
-
-  
-}
-
-function sortingRec(array) {
-
-}
-
 
 

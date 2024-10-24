@@ -40,6 +40,8 @@ export function placeShip(element, type, location, cells) {
   element.onmousedown = dragShip;
   element.onmouseover = changeCursor;
   let shipAngle = 0;
+  let mouseX;
+  let mouseY;
   
   const shipImg = new Image();
   shipImg.classList.add('gameIcon', type);
@@ -56,10 +58,10 @@ export function placeShip(element, type, location, cells) {
       shipAngle -= 45 % 360;
       if (shipAngle === -90) shipAngle = 45;
     };
+    dragMove(e)
   }
 
-  function closeDrag() {
-    console.log(element.getBoundingClientRect());
+  function closeDrag(e) {
     nodes.dialog.close();
     nodes.main.prepend(nodes.board)
     document.onmouseup = null;
@@ -80,24 +82,41 @@ export function placeShip(element, type, location, cells) {
     nodes.dialog.append(nodes.board);
     nodes.dialog.showModal();
     nodes.dialog.focus();
-    const shipRect = shipImg.getBoundingClientRect();
-    const boardRect = nodes.board.getBoundingClientRect();
     document.onkeyup = rotateShip;
-
-    
-    function dragMove(e) {
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
-      shipImg.style.position = 'absolute';
-      shipImg.style.top = `${mouseY - boardRect.top - shipRect.height + 15}px`;
-      shipImg.style.left = `${mouseX - boardRect.left - (shipRect.width / 2)}px`;
-    }
-
-    
-    
   }
 
+  function dragMove(e) {
+    const boardRect = nodes.board.getBoundingClientRect();
+    const shipRect = shipImg.getBoundingClientRect();
+    mouseX = e.clientX || mouseX;
+    mouseY = e.clientY || mouseY;
+    shipImg.style.position = 'absolute';
+    if (shipAngle === 0) {
+      shipImg.style.top = `${mouseY - boardRect.top - (shipRect.height / 2) - 15}px`;
+      shipImg.style.left = `${mouseX - boardRect.left}px`;
+    }
 
+    if (shipAngle === -45) {
+      shipImg.style.top = `${mouseY - boardRect.top - (shipRect.height / 2) - 15}px`;
+      shipImg.style.left = `${mouseX - boardRect.left - (shipRect.width / 4)}px`;
+    }
+    
+    if (shipAngle === 45) {
+      shipImg.style.top = `${mouseY - boardRect.top - (shipRect.height / 2) - 15}px`;
+      shipImg.style.left = `${mouseX - boardRect.left - (shipRect.width * 2.5)}px`;
+    }
+
+    let column = Math.floor(((mouseX - boardRect.left + 1) / boardRect.width) * 10); 
+    let row = Math.floor(((mouseY - boardRect.top + 1) / boardRect.height) * 10); 
+    console.log(row);
+    console.log(column);
+
+    function sortingAlgo(e, cells) {
+      let column;
+      let row;
+
+    }
+  }
 
 }
 
@@ -112,40 +131,10 @@ export function placeShip(element, type, location, cells) {
 
 export function cellsCalc() {
   const cells = Array.from(document.querySelectorAll('.cell'));
-  const cellsData = [
-    {Quadrant: 0,
-      top: null,
-      bottom: null,
-      left: null,
-      right: null,
-      rows: [],
-      columns: [],
-    },
-    {Quadrant: 1,
-      top: null,
-      bottom: null,
-      left: null,
-      right: null,
-      rows: [],
-      columns: [],
-    },
-    {Quadrant: 2,
-      top: null,
-      bottom: null,
-      left: null,
-      right: null,
-      rows: [],
-      columns: [],
-    },
-    {Quadrant: 3,
-      top: null,
-      bottom: null,
-      left: null,
-      right: null,
-      rows: [],
-      columns: [],
-    },
-  ];
+  const cellsData = {
+    rows: Array.from({length: 10}, () => []),
+    columns: Array.from({length: 10}, () => []),
+  };
 
   for (let i = 0; i < cells.length; i++) {
     const cell = cells[i];
@@ -162,36 +151,8 @@ export function cellsCalc() {
       top: cellSquare.top,
       bottom: cellSquare.bottom
     }
-    const quadrant = getQuadrant(infoObj);
-    let arraySlotRow = cellsData[quadrant].rows.find((item) => item.id == cellRow);
-    if (!arraySlotRow) {
-      const newArrLength = cellsData[quadrant].rows.push({id: cellRow, cells: [], top: cellSquare.top, bottom: cellSquare.bottom, left: cellSquare.left});
-      arraySlotRow = cellsData[quadrant].rows[newArrLength - 1];
-    };
-    let arraySlotColumn = cellsData[quadrant].columns.find((item) => item.id == cellColumn);
-    if (!arraySlotColumn) {
-      const newArrLength = cellsData[quadrant].columns.push({id: cellColumn, cells: [], left: cellSquare.left, right: cellSquare.right, top: cellSquare.top});
-      arraySlotColumn = cellsData[quadrant].columns[newArrLength - 1];
-    };
-    
-    if (cellsData[quadrant].rows.length === 5 && cellsData[quadrant].columns.length === 5) {
-      cellsData[quadrant].columns.forEach((column) => column.bottom = cellSquare.bottom);
-      cellsData[quadrant].rows.forEach((row) => row.right = cellSquare.right);
-      cellsData[quadrant].bottom = cellSquare.bottom;
-      cellsData[quadrant].right = cellSquare.right;
-      cellsData[quadrant].top = cellsData[quadrant].columns[0].top;
-      cellsData[quadrant].left = cellsData[quadrant].columns[0].left;
-    }
-    arraySlotRow.cells.push(infoObj);
-    arraySlotColumn.cells.push(infoObj);
-  }
-
-  function getQuadrant(cell) {
-    const unit = Math.sqrt(cells.length) / 2;
-    if (cell.row < unit && cell.column < unit) return 0;
-    else if (cell.row < unit && cell.column >= unit) return 1;
-    else if (cell.row >= unit && cell.column < unit) return 2;
-    else return 3;
+    cellsData.rows[cellRow].push(infoObj);
+    cellsData.columns[cellColumn].push(infoObj);
   }
 
   return cellsData;
