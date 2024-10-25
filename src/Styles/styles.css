@@ -10,9 +10,24 @@ main {
   flex-direction: column;
 }
 
-div.board {
+div.boardsContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+div.playerBoard {
   height: 500px;
   width: 500px;
+  border: 1px solid black;
+  display: grid;
+  grid: repeat(10, 10%) / repeat(10, 10%);
+  position: relative;
+
+}
+
+div.computerBoard {
+  height: 200px;
+  width: 200px;
   border: 1px solid black;
   display: grid;
   grid: repeat(10, 10%) / repeat(10, 10%);
@@ -22,6 +37,13 @@ div.board {
 div.cell {
   border: 1px solid black;
   position: relative;
+}
+
+.blastImg {
+  height: 100%;
+  position: relative;
+  z-index: 10;
+  
 }
 
 div.cell.hover-effect {
