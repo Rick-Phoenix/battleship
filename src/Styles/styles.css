@@ -46,11 +46,15 @@ div.computerCell {
   position: relative;
 }
 
-.blastImg {
+.computerCell:hover {
+  background-color: var(--test)
+}
+
+.blastImg,
+.splashImg {
   height: 100%;
   position: relative;
   z-index: 10;
-  
 }
 
 div.cell:nth-child(-n + 10)::before {

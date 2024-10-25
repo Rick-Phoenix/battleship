@@ -1,3 +1,4 @@
+import { playerShips } from "..";
 import { Ship } from "./classes";
 import * as nodes from "./selectors"
 
@@ -17,13 +18,15 @@ export function getImages(index) {
   return imagesObj;
 }
 
-const blastImgSource = getImages()[`blast.png`];
+export const blastImgSource = getImages()[`blast.png`];
+export const splashImgSource = getImages()[`splash.png`];
 
 
 
 export function populateBoard(target, type) {
   for (let i = 0; i < 100; i++) {
     const cell = createElement('div', `${type}Cell`);
+    cell.id = i;
     const cellRow = Math.floor(i / 10);
     const cellColumn = Math.floor(i % 10);
     cell.setAttribute('data-row', cellRow);
@@ -35,7 +38,7 @@ export function populateBoard(target, type) {
 }
 
 
-export let playerShips = [];
+export let playerShipsList = [];
 export let computerShips = [];
 
 export function placeShip(element, type, location, cells) {
@@ -188,10 +191,6 @@ export function placeShip(element, type, location, cells) {
             cell.filled = true;
             cell.occupyingShip = ship;
             ship.place(targetCells);
-            const blastImg = new Image();
-            blastImg.src = blastImgSource;
-            blastImg.className = 'blastImg';
-            cell.node.append(blastImg)
           });
 
           const firstCell = targetCells[0];
@@ -219,18 +218,20 @@ export function placeShip(element, type, location, cells) {
           }
 
           
-          playerShips.push(ship);
-          if (playerShips.length === 5) console.log(playerShips);
-          return closeDrag(targetCells);
-
+          playerShipsList.push(ship);
+          if (playerShipsList.length > 5) playerShipsList = [ship];
+          closeDrag(targetCells);
         }
       }
     }
   }
 }
 
+export function getShips() {
+  return [computerShips, playerShipsList];
+}
+
 export function computerShipPlacement(type, cells) {
-  console.log(type);
   const ship = new Ship (type, null);
   const randomizer = Math.random();
   let direction;
@@ -257,14 +258,12 @@ export function computerShipPlacement(type, cells) {
 
   ship.place(targetCells);
   computerShips.push(ship);
+  if (computerShips.length > 5) computerShips = [ship];
 
   targetCells.forEach((cell) => {
     cell.filled = true;
     cell.occupyingShip = ship;
   })
-
-  console.log(targetCells);
-  console.log(computerShips);
 }
 
 export function cellsCalc(player) {
