@@ -10,6 +10,8 @@ main {
   flex-direction: column;
 }
 
+
+
 div.boardsContainer {
   display: flex;
   flex-direction: row;
@@ -22,7 +24,11 @@ div.playerBoard {
   display: grid;
   grid: repeat(10, 10%) / repeat(10, 10%);
   position: relative;
+}
 
+div.sideMenu {
+  position: absolute;
+  right: 20px;
 }
 
 div.computerBoard {
@@ -34,7 +40,8 @@ div.computerBoard {
   position: relative;
 }
 
-div.cell {
+div.playerCell,
+div.computerCell {
   border: 1px solid black;
   position: relative;
 }
@@ -44,10 +51,6 @@ div.cell {
   position: relative;
   z-index: 10;
   
-}
-
-div.cell.hover-effect {
-  background-color: aquamarine;
 }
 
 div.cell:nth-child(-n + 10)::before {
