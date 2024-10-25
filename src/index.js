@@ -3,7 +3,6 @@ import * as nodes from "./Modules/selectors";
 import { createElement, populateBoard, placeShip, getImages, cellsCalc, isOverlapping, } from "./Modules/functions";
 
 let cells; 
-const images = getImages();
 
 document.addEventListener('DOMContentLoaded', (e) => {
   populateBoard(nodes.board);
@@ -11,7 +10,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
   const ship = document.querySelectorAll('img.ship');
   ship.forEach((ship) => {
     const shipType = ship.dataset.type;
-    placeShip(ship, shipType, images[`${shipType}-hor.png`], cells)
+    placeShip(ship, shipType, getImages()[`${shipType}-hor.png`], cells)
   });
   console.log(cells);
 

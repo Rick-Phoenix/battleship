@@ -17,6 +17,8 @@ export function getImages(index) {
   return imagesObj;
 }
 
+const blastImgSource = getImages()[`blast.png`];
+
 
 
 export function populateBoard(target) {
@@ -79,6 +81,7 @@ export function placeShip(element, type, location, cells) {
     element.onmouseover = null;
     element.style.cursor = 'auto';
     document.onclick = null;
+    document.onkeyup = null;
   }
 
   function dragShip(e) {
@@ -96,6 +99,9 @@ export function placeShip(element, type, location, cells) {
   function dragMove(e) {
     const boardRect = nodes.board.getBoundingClientRect();
     let shipRect = shipImg.getBoundingClientRect();
+    let offset;
+    const offsetTop = boardRect.top - cells.rows[0][0].top;
+
     mouseX = e.clientX || mouseX
     mouseY = e.clientY || mouseY
 
@@ -113,7 +119,7 @@ export function placeShip(element, type, location, cells) {
 
     if (shipAngle === -90) {
       let newRect = shipImg.getBoundingClientRect()
-      const offset = newRect.height / 2 - newRect.width / 2;
+      offset = newRect.height / 2 - newRect.width / 2;
       let newTop = mouseY - boardRect.top - (newRect.height / 2);
 
       newTop = Math.max(offset, newTop);
@@ -161,6 +167,7 @@ export function placeShip(element, type, location, cells) {
           }
         }
       }
+      
 
       if (targetCells.length === ship.length) {
         document.onclick = occupyCells;
@@ -168,17 +175,51 @@ export function placeShip(element, type, location, cells) {
 
       function checkFilledStatus() {
         const check = targetCells.find((cell) => cell.filled === true);
-        console.log(check);
         if (check !== undefined) return true;
         else return false;
       }
 
       function occupyCells() {
         if (!checkFilledStatus()) {
-          targetCells.forEach((cell) => cell.filled = true);
+
+          targetCells.forEach((cell) => {
+            cell.filled = true;
+            cell.occupyingShip = ship;
+            ship.place(targetCells);
+            const blastImg = new Image();
+            blastImg.src = blastImgSource;
+            blastImg.className = 'blastImg';
+            cell.node.append(blastImg)
+          });
+
+          const firstCell = targetCells[0];
+
+          if (shipAngle === 0) {
+            const areaLength = 50 * ship.length;
+            const areaHeight = 50;
+            const freeSpaceX = areaLength - shipRect.width;
+            const freeSpaceY = areaHeight - shipRect.height;
+  
+            shipImg.style.left = `${(firstCell.left + freeSpaceX / 2 - boardRect.left)}px`
+            shipImg.style.top = `${(firstCell.top - boardRect.top + offsetTop + freeSpaceY / 2)}px`
+  
+          }
+
+          if (shipAngle === -90) {
+            const areaLength = 50;
+            const areaHeight = 50 * ship.length;
+            const freeSpaceX = areaLength - shipRect.width;
+            const freeSpaceY = areaHeight - shipRect.height;
+  
+            shipImg.style.left = `${(firstCell.left + freeSpaceX / 2 - boardRect.left - offset)}px`
+            shipImg.style.top = `${(firstCell.top - boardRect.top + offsetTop + freeSpaceY / 2 + offset)}px`
+
+          }
+          
+
+          console.log(targetCells);
           return closeDrag(targetCells);
         }
-        
       }
     }
   }

@@ -15,7 +15,12 @@ export class Ship {
     this.coordinates = coordinates;
   }
 
-  hit() {
+  place(coordinates) {
+    this.coordinates = coordinates;
+  }
+
+  hit(cell) {
+    cell.hit = true;
     this.hits++;
   }
 
