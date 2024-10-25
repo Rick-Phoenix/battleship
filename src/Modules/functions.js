@@ -37,7 +37,7 @@ export function populateBoard(target) {
 export function placeShip(element, type, location, cells) {
   const ship = new Ship(type, null);
 
-  element.onmousedown = dragShip;
+  element.onclick = dragShip;
   element.onmouseover = changeCursor;
   let shipAngle = 0;
   let mouseX;
@@ -70,22 +70,20 @@ export function placeShip(element, type, location, cells) {
     
   }
 
-  function closeDrag(e) {
+  function closeDrag(targetCells) {
     nodes.dialog.close();
     nodes.main.prepend(nodes.board)
-    document.onmouseup = null;
     document.onmousemove = null;
-    document.removeEventListener('onkeypress', rotateShip);
     element.style.opacity = '0.5';
-    element.onmousedown = null;
+    element.onclick = null;
     element.onmouseover = null;
     element.style.cursor = 'auto';
+    document.onclick = null;
   }
 
   function dragShip(e) {
     e.preventDefault();
     document.onmousemove = dragMove;
-    document.onmouseup = closeDrag;
     
     nodes.board.append(shipImg);
     nodes.dialog.append(nodes.board);
@@ -102,7 +100,6 @@ export function placeShip(element, type, location, cells) {
     mouseY = e.clientY || mouseY
 
     if (shipAngle === 0) {
-      console.log(shipRect);
       let newTop = mouseY - boardRect.top - (shipRect.height / 2) - 15;
       newTop = Math.max(0, newTop);
       newTop = Math.min(newTop, boardRect.height - shipRect.height);
@@ -138,8 +135,10 @@ export function placeShip(element, type, location, cells) {
       if (startColumn < 0) startColumn = 0;
       if (startRow < 0) startRow = 0;
       if (startRow > 9) startRow = 9;
+
       cells.rows.forEach((row) => row.forEach((cell) => cell.node.classList.remove('hover-effect')));
       let targetCells;
+
       if (shipAngle === 0) {
         if (startColumn + ship.length > 9) startColumn = 10 - ship.length;
         const row = cells.rows[startRow]
@@ -163,9 +162,26 @@ export function placeShip(element, type, location, cells) {
         }
       }
 
+      if (targetCells.length === ship.length) {
+        document.onclick = occupyCells;
+      }
+
+      function checkFilledStatus() {
+        const check = targetCells.find((cell) => cell.filled === true);
+        console.log(check);
+        if (check !== undefined) return true;
+        else return false;
+      }
+
+      function occupyCells() {
+        if (!checkFilledStatus()) {
+          targetCells.forEach((cell) => cell.filled = true);
+          return closeDrag(targetCells);
+        }
+        
+      }
     }
   }
-
 }
 
 export function cellsCalc() {
