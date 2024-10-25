@@ -21,9 +21,9 @@ const blastImgSource = getImages()[`blast.png`];
 
 
 
-export function populateBoard(target) {
+export function populateBoard(target, type) {
   for (let i = 0; i < 100; i++) {
-    const cell = createElement('div', 'cell');
+    const cell = createElement('div', `${type}Cell`);
     const cellRow = Math.floor(i / 10);
     const cellColumn = Math.floor(i % 10);
     cell.setAttribute('data-row', cellRow);
@@ -35,6 +35,8 @@ export function populateBoard(target) {
 }
 
 
+export let playerShips = [];
+export let computerShips = [];
 
 export function placeShip(element, type, location, cells) {
   const ship = new Ship(type, null);
@@ -215,18 +217,58 @@ export function placeShip(element, type, location, cells) {
             shipImg.style.top = `${(firstCell.top - boardRect.top + offsetTop + freeSpaceY / 2 + offset)}px`
 
           }
-          
 
-          console.log(targetCells);
+          
+          playerShips.push(ship);
+          if (playerShips.length === 5) console.log(playerShips);
           return closeDrag(targetCells);
+
         }
       }
     }
   }
 }
 
-export function cellsCalc() {
-  const cells = Array.from(document.querySelectorAll('.cell'));
+export function computerShipPlacement(type, cells) {
+  console.log(type);
+  const ship = new Ship (type, null);
+  const randomizer = Math.random();
+  let direction;
+  if (randomizer > 0.5) direction = 'vertical';
+  else direction = 'horizontal';
+
+  let startRow = Math.floor(randomizer * 9);
+  let startColumn = Math.floor(randomizer * 9);
+  let targetCells;
+
+  if (direction === 'horizontal') {
+    if (startColumn + ship.length > 9) return computerShipPlacement(type,cells);
+    targetCells = cells.rows[startRow].slice(startColumn, startColumn + ship.length);
+    const check = targetCells.find((cell) => cell.filled === true);
+    if (check) return computerShipPlacement(type, cells);
+  }
+
+  if (direction === 'vertical') {
+    if (startRow + ship.length > 9) return computerShipPlacement(type,cells);
+    targetCells = cells.columns[startColumn].slice(startRow, startRow + ship.length);
+    const check = targetCells.find((cell) => cell.filled === true);
+    if (check) return computerShipPlacement(type, cells);
+  }
+
+  ship.place(targetCells);
+  computerShips.push(ship);
+
+  targetCells.forEach((cell) => {
+    cell.filled = true;
+    cell.occupyingShip = ship;
+  })
+
+  console.log(targetCells);
+  console.log(computerShips);
+}
+
+export function cellsCalc(player) {
+  const cells = Array.from(document.querySelectorAll(`.${player}Cell`));
   const cellsData = {
     rows: Array.from({length: 10}, () => []),
     columns: Array.from({length: 10}, () => []),
