@@ -1,3 +1,5 @@
+import { blastImgSource, computerShips, splashImgSource } from "./functions";
+
 export class Ship {
   constructor(type, coordinates) {
     let shipTable = {
@@ -19,19 +21,68 @@ export class Ship {
     this.coordinates = coordinates;
   }
 
-  hit(cell) {
-    cell.hit = true;
+  hit() {
     this.hits++;
-  }
-
-  isSunk() {
     if (this.hits === this.length) this.sunk = true;
   }
+
 }
 
 export class GameBoard {
-  constructor() {
-    this.rows = [0,1,2,3,4,5,6,7,8,9];
-    this.columns = [0,1,2,3,4,5,6,7,8,9];
+  constructor(playerBoard, computerBoard, playerShips, computerShips) {
+    this.players = {
+      player: {
+        name: 'Player',
+        board: playerBoard,
+        ships: playerShips,
+        oppBoard: computerBoard,
+        oppShips: computerShips,
+        hits: [],
+      },
+
+      computer: {
+        name: 'Computer',
+        board: computerBoard,
+        ships: computerShips,
+        oppBoard: playerBoard,
+        oppShips: playerShips,
+        hits: [],
+      }
+    }
+
+    this.gameOver = false;
   }
+
+  attack(player, cell) {
+    const attacker = this.players[player]
+    const targetShip = cell.occupyingShip;
+    if (targetShip) {
+      targetShip.hit();
+      attacker.hits.push(cell);
+      const blastImg = new Image();
+      blastImg.src = blastImgSource;
+      blastImg.className = 'blastImg';
+      cell.node.append(blastImg)
+      if (targetShip.sunk === true) {
+        attacker.oppShips = attacker.oppShips.filter((ship) => ship !== targetShip)
+        if (attacker.oppShips.length < 1) this.win(attacker.name);
+      }
+    }
+    
+    if (!targetShip) {
+      const splashImg = new Image();
+      splashImg.src = splashImgSource;
+      splashImg.className = 'splashImg';
+      console.log(cell);
+      cell.node.append(splashImg);
+    }
+    
+    cell.hit = true;
+  }
+
+  win(winner) {
+    this.gameOver = true;
+    this.winner = winner;
+  }
+
 }

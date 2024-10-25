@@ -5,3 +5,5 @@ export const board = document.querySelector('div.playerBoard');
 export const draggable = document.querySelector('div.draggable');
 export const dialog = document.querySelector('dialog');
 export const computerBoard = document.querySelector('div.computerBoard');
+export const startBtn = document.querySelector('button.start');
+export const turnBtn = document.querySelector('button.turn');
