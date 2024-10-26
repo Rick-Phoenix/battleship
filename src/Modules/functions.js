@@ -79,6 +79,7 @@ export function placeShip(element, type, location, cells) {
 
   function closeDrag(targetCells) {
     nodes.dialog.close();
+    nodes.dialog.style.cursor = 'auto';
     nodes.main.prepend(nodes.board)
     document.onmousemove = null;
     element.style.opacity = '0.5';
@@ -97,6 +98,8 @@ export function placeShip(element, type, location, cells) {
     nodes.dialog.append(nodes.board);
     nodes.dialog.showModal();
     nodes.dialog.focus();
+    nodes.dialog.style.cursor = 'grabbing';
+    nodes.dialog.style.setProperty('--instructions', "'Press Q to rotate the ship'");
     shipImg.style.position = 'absolute';
     document.onkeyup = rotateShip;
   }

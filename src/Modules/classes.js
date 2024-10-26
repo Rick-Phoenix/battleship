@@ -64,6 +64,7 @@ export class GameBoard {
       blastImg.className = 'blastImg';
       cell.node.append(blastImg)
       if (targetShip.sunk === true) {
+        attacker.hits = attacker.hits.filter((cell) => cell.occupyingShip.sunk === false);
         attacker.oppShips = attacker.oppShips.filter((ship) => ship !== targetShip)
         if (attacker.oppShips.length < 1) this.win(attacker.name);
       }
@@ -73,7 +74,6 @@ export class GameBoard {
       const splashImg = new Image();
       splashImg.src = splashImgSource;
       splashImg.className = 'splashImg';
-      console.log(cell);
       cell.node.append(splashImg);
     }
     
@@ -85,4 +85,76 @@ export class GameBoard {
     this.winner = winner;
   }
 
+  computerTurn(index = 1) {
+    const hits = this.players.computer.hits;
+    if (hits.length === 0) return this.attack('computer', this.randomChoice());
+    if (hits.length > 0) {
+      const lastHit = hits[hits.length - index];
+      if (!lastHit) return this.attack('computer', this.randomChoice());
+      let direction = null;
+      if (hits.length > index) {
+        const previousHit = hits[hits.length - index - 1];
+        if (previousHit.row === lastHit.row) direction = 'horizontal';
+        else if (previousHit.column === lastHit.column) direction = 'vertical';
+      }
+
+      const target = this.findNearShip(lastHit, direction);
+      if (target) return this.attack('computer', target);
+      else return this.computerTurn(index + 1);
+    } 
+  }
+
+  findNearShip(cell, direction = null) {
+    const row = +cell.row;
+    const column = +cell.column;
+    const cells = this.players.computer.oppBoard;
+    let targetsList;
+
+    if (direction === null) {
+      targetsList = [
+        cells.rows[row + 1]?.[column],
+        cells.rows[row - 1]?.[column],
+        cells.columns[column + 1]?.[row],
+        cells.columns[column - 1]?.[row],
+      ]
+    }
+
+    else if (direction === 'horizontal') {
+      targetsList = [
+        cells.columns[column + 1]?.[row],
+        cells.columns[column - 1]?.[row]
+      ]
+    }
+
+    else {
+      targetsList = [
+        cells.rows[row + 1]?.[column],
+        cells.rows[row - 1]?.[column],
+      ]
+    }
+    
+    const potentialTargets = targetsList.filter((cell) => cell && this.checkCell(cell) === true)
+
+    if (potentialTargets.length === 0) return false;
+
+    else {
+      const randomizer = Math.floor(Math.random() * potentialTargets.length);
+      const target = potentialTargets[randomizer];
+      return target;
+    }
+  }
+
+  checkCell(cell) {
+    return !(cell.hit === true || cell.row < 0 || cell.row > 9 || 
+      cell.column < 0 || cell.column > 9
+    );
+  }
+
+  randomChoice() {
+    const randomRow = Math.round(Math.random() * 9);
+    const randomColumn = Math.round(Math.random() * 9);
+    const randomCell = this.players.computer.oppBoard.rows[randomRow][randomColumn];
+    if (randomCell.hit) return this.randomChoice();
+    else return randomCell;
+  }
 }

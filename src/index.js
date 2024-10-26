@@ -9,6 +9,21 @@ let computerCells;
 let computerShips;
 let gameBoard;
 
+function gameOver() {
+  nodes.dialog.style.setProperty('--instructions', "");
+  nodes.dialog.showModal();
+  const gameOver = createElement('h1');
+  gameOver.textContent = `${gameBoard.winner} won! Press the button to start another game.`;
+  const restartBtn = createElement('button');
+  restartBtn.textContent = 'Restart Game';
+  nodes.dialog.append(gameOver, restartBtn);
+  restartBtn.addEventListener('click', () => {
+    nodes.dialog.innerHTML = '';
+    nodes.dialog.close();
+    initializer();
+  })
+}
+
 function initializer() {
   nodes.board.innerHTML = '';
   nodes.computerBoard.innerHTML = '';
@@ -30,7 +45,6 @@ function initializer() {
     playerShips = getShips()[1];
     if (playerShips.length < 5) return;
     gameBoard = new GameBoard(playerCells, computerCells, playerShips, computerShips);
-    console.log(gameBoard);
     const compIcons = document.querySelectorAll('.computerCell');
     compIcons.forEach((icon) => {
       icon.style.setProperty('--test', 'aquamarine');
@@ -42,29 +56,13 @@ function initializer() {
         if (targetCell.hit) return;
         gameBoard.attack('player', targetCell);
         if (gameBoard.gameOver === true) {
-          nodes.dialog.showModal();
-          const gameOver = createElement('h1');
-          gameOver.textContent = `${gameBoard.winner} won! Press the button to start another game.`;
-          const restartBtn = createElement('button');
-          restartBtn.textContent = 'Restart Game';
-          nodes.dialog.append(gameOver, restartBtn);
-          restartBtn.addEventListener('click', () => {
-            nodes.dialog.innerHTML = '';
-            nodes.dialog.close();
-            initializer();
-          })
+          gameOver();
         }
         if (gameBoard.gameOver === false) {
-          const compTargetCell = computerChoice();
-          gameBoard.attack('computer', compTargetCell);
-        }
-  
-        function computerChoice() {
-          const randomRow = Math.round(Math.random() * 9);
-          const randomColumn = Math.round(Math.random() * 9);
-          const randomCell = playerCells.rows[randomRow][randomColumn];
-          if (randomCell.hit) return computerChoice();
-          else return randomCell;
+          gameBoard.computerTurn();
+          if (gameBoard.gameOver === true) {
+            gameOver();
+          }
         }
       }
     })
