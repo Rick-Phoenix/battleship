@@ -241,8 +241,8 @@ export function computerShipPlacement(type, cells) {
   if (randomizer > 0.5) direction = 'vertical';
   else direction = 'horizontal';
 
-  let startRow = Math.floor(randomizer * 9);
-  let startColumn = Math.floor(randomizer * 9);
+  let startRow = Math.floor(Math.random() * 10);
+  let startColumn = Math.floor(Math.random() * 10);
   let targetCells;
 
   if (direction === 'horizontal') {

@@ -34,6 +34,7 @@ div.sideMenu {
   gap: 20px;
   align-items: center;
   max-width: 200px;
+  text-align: center;
 }
 
 div.computerBoard {
@@ -43,6 +44,7 @@ div.computerBoard {
   display: grid;
   grid: repeat(10, 10%) / repeat(10, 10%);
   position: relative;
+  margin-top: 20px;
 }
 
 div.playerCell,
@@ -53,6 +55,22 @@ div.computerCell {
 
 .computerCell:hover {
   background-color: var(--test)
+}
+
+div.computerCell:nth-child(-n + 10)::before {
+  content: var(--col);
+  position: absolute;
+  top: -100%;
+  left: calc(50% - (1ch / 2));
+  font-size: 0.8rem;
+}
+
+div.computerCell:nth-child(10n + 1)::after {
+  content: var(--row);
+  position: absolute;
+  left: -70%;
+  top: calc(50% - 1ch);
+  font-size: 0.8rem;
 }
 
 .blastImg,
