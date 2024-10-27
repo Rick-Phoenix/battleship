@@ -9,3 +9,4 @@ export const startBtn = document.querySelector('button.start');
 export const turnBtn = document.querySelector('button.turn');
 export const shipInfo = document.querySelector('h3.shipInfo');
 export const console = document.querySelector('h3.console');
+export const ships = document.querySelectorAll('div.ship');

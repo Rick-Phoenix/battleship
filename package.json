@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "predeploy": "npx webpack && (git rev-parse --verify gh-pages && git checkout gh-pages || git checkout --orphan gh-pages) && git merge main --no-edit",
+    "deploy": "git add dist -f && git commit -m 'Deployment Commit' && git subtree push --prefix dist origin gh-pages && git checkout main" 
   },
   "keywords": [],
   "author": "",

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./Images/bat-prev.png" type="image/x-icon">
     <title>Battleship</title>
 </head>
 <body>
@@ -11,18 +12,17 @@
         <div class="playerBoard"></div>
         <h3 class="shipInfo">Your Ships</h3>
         <div class="shipsRow">
-            <img src="./Images/car-prev.png" data-type="car" class="ship">
-            <img src="./Images/bat-prev.png" data-type="bat" class="ship">
-            <img src="./Images/sub-prev.png" data-type="sub" class="ship">
-            <img src="./Images/cru-prev.png" data-type="cru" class="ship">
-            <img src="./Images/des-prev.png" data-type="des" class="ship">
+            <div class="ship" data-type="car"><img src="./Images/car-prev.png" data-type="car" class="ship"></div>
+            <div class="ship" data-type="bat"><img src="./Images/bat-prev.png" data-type="bat" class="ship"></div>
+            <div class="ship" data-type="sub"><img src="./Images/sub-prev.png" data-type="sub" class="ship"></div>
+            <div class="ship" data-type="cru"><img src="./Images/cru-prev.png" data-type="cru" class="ship"></div>
+            <div class="ship" data-type="des"><img src="./Images/des-prev.png" data-type="des" class="ship"></div>
         </div>
         <div class="sideMenu">
             <h3 class="console">Welcome to Battleship! <br> <br> Place your ships on the board and press the button below to start the game. </h3>
             <button type="button" class="start disabled">Start</button>
             <div class="computerBoard"></div>
             <span class="boardDesc">Opponent's Board</span>
-            <span>The Odin Project 2024 <br> <br> Icons by Freepik and dvjstock</span>
         </div>
     </main>
 </body>

@@ -93,6 +93,8 @@ export function placeShip(element, type, location, cells) {
     element.style.cursor = 'auto';
     document.onclick = null;
     document.onkeyup = null;
+    element.onmouseover = null;
+    element.onmouseout = null;
   }
 
   function dragShip(e) {
@@ -200,7 +202,7 @@ export function placeShip(element, type, location, cells) {
             cell.occupyingShip = ship;
             ship.place(targetCells);
             cell.node.classList.remove('hover-effect');
-
+            cell.node.classList.add('active');
           });
 
           const firstCell = targetCells[0];
@@ -211,7 +213,7 @@ export function placeShip(element, type, location, cells) {
             const freeSpaceX = areaLength - shipRect.width;
             const freeSpaceY = areaHeight - shipRect.height;
   
-            shipImg.style.left = `${(firstCell.left + freeSpaceX / 2 - boardRect.left + 20)}px`
+            shipImg.style.left = `${(firstCell.left + freeSpaceX / 2 - boardRect.left + 23)}px`
             shipImg.style.top = `${(firstCell.top - boardRect.top + offsetTop + freeSpaceY / 2)}px`
   
           }
@@ -222,7 +224,7 @@ export function placeShip(element, type, location, cells) {
             const freeSpaceX = areaLength - shipRect.width;
             const freeSpaceY = areaHeight - shipRect.height;
   
-            shipImg.style.left = `${(firstCell.left + freeSpaceX / 2 - boardRect.left - offset + 20)}px`
+            shipImg.style.left = `${(firstCell.left + freeSpaceX / 2 - boardRect.left - offset + 23)}px`
             shipImg.style.top = `${(firstCell.top - boardRect.top + offsetTop + freeSpaceY / 2 + offset)}px`
 
           }
