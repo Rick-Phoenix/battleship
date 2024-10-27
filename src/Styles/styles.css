@@ -1,5 +1,14 @@
+@font-face {
+  font-family: 'Inter';
+  src: url(../Fonts/Inter-VariableFont_opsz\,wght.ttf);
+}
+
 body {
   box-sizing: border-box;
+  background-image: url(../Images/background.jpg);
+  background-size: cover;
+  font-family: 'Inter';
+  color: white;
 }
 
 main {
@@ -10,7 +19,19 @@ main {
   flex-direction: column;
 }
 
+button.restart,
+button.start {
+  background: #2e5e5c;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-family: inherit;
+}
 
+button.disabled {
+  color: darkgray;
+  pointer-events: none;
+}
 
 div.boardsContainer {
   display: flex;
@@ -20,10 +41,19 @@ div.boardsContainer {
 div.playerBoard {
   height: 500px;
   width: 500px;
-  border: 1px solid black;
   display: grid;
   grid: repeat(10, 10%) / repeat(10, 10%);
   position: relative;
+}
+
+div.playerBoard::before {
+  content: '';
+  background: url('../Images/sea.jpg');
+  opacity: 0.3;
+  background-size: contain;
+  position: absolute;
+  width: 500px;
+  height: 500px;
 }
 
 div.sideMenu {
@@ -35,6 +65,9 @@ div.sideMenu {
   align-items: center;
   max-width: 200px;
   text-align: center;
+  background-color: #2873718a;
+  border-radius: 5px;
+  padding: 20px;
 }
 
 div.computerBoard {
@@ -45,16 +78,27 @@ div.computerBoard {
   grid: repeat(10, 10%) / repeat(10, 10%);
   position: relative;
   margin-top: 20px;
+  margin-left: 10px;
+}
+
+.boardDesc {
+  margin-top: -15px;
 }
 
 div.playerCell,
 div.computerCell {
   border: 1px solid black;
   position: relative;
+  background-color: transparent;
+}
+
+div.playerCell.hover-effect {
+  background-color: #82abab96;
 }
 
 .computerCell:hover {
-  background-color: var(--test)
+  background-color: var(--hover);
+  opacity: 1.5;
 }
 
 div.computerCell:nth-child(-n + 10)::before {
@@ -83,32 +127,143 @@ div.computerCell:nth-child(10n + 1)::after {
 div.playerCell:nth-child(-n + 10)::before {
   content: var(--col);
   position: absolute;
-  top: -100%;
-  left: calc(50% - (1ch / 2));
+  top: -103%;
+  color: white;
+  background-color: #2873718a;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+div.playerCell:nth-child(1)::before {
+  content: var(--col);
+  position: absolute;
+  top: -103%;
+  color: white;
+  background-color: #2873718a;
+  width: 100px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  left: -50px;
+  align-items: end;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
+div.playerCell:nth-child(10)::before {
+  content: var(--col);
+  position: absolute;
+  top: -103%;
+  color: white;
+  border-radius: 0 5px 0 0;
+  background-color: #2873718a;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 div.playerCell:nth-child(10n + 1)::after {
   content: var(--row);
   position: absolute;
-  left: -70%;
-  top: calc(50% - 1ch);
+  left: -103%;
+  color: white;
+  width: 50px;
+  height: 50px;
+  background-color: #2873718a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: -0.5px;
+}
+
+div.playerCell:nth-child(91)::after {
+  content: var(--row);
+  position: absolute;
+  left: -104%;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 0 0 0 5px;
+  background-color: #2873718a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center
 }
 
 img.ship {
   width: 100px;
+  border-radius: 10px;
+}
+
+div.shipsRow {
+  background: #00fff526;
+  border-radius: 5px 10px;
+  padding: 10px;  
+}
+
+h3.shipInfo {
+  background: #00fff526;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #ffffff;
+}
+
+h3.console {
+  padding: 10px;
+}
+
+
+
+img.ship:hover {
+  background-color: #7c797976;
 }
 
 dialog {
   overflow: hidden;
-  padding: 15px;
+  padding: 5px;
+  border-radius: 5px;
+  padding-top: 75px;
+  padding-left: 50px;
   text-align: center;
+  background-color: transparent;
+  border: none !important;
+}
+
+dialog.gameOver {
+  background: #2873718a;
+  color: white;
+  padding: 20px;
+}
+
+dialog:focus {
+  outline: none;
+}
+
+dialog::backdrop {
+  background: url('../Images/background.jpg');
 }
 
 dialog::before {
   content: var(--instructions);
+  background-color: #287371d7;
+  border-radius: 5px;
+  color: white;
   position: relative;
-  top: -7px;
+  top: -65px;
+  padding: 10px;
+  font-weight: bold;
 }
+
+
 
 img.gameIcon {
   aspect-ratio: initial;

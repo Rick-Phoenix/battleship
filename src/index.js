@@ -10,14 +10,19 @@ let computerShips;
 let gameBoard;
 
 function gameOver() {
+  nodes.startBtn.classList.add('disabled');
   nodes.dialog.style.setProperty('--instructions', "");
   nodes.dialog.showModal();
+  nodes.dialog.classList.add('gameOver');
   const gameOver = createElement('h1');
   gameOver.textContent = `${gameBoard.winner} won! Press the button to start another game.`;
   const restartBtn = createElement('button');
+  restartBtn.className = 'restart';
   restartBtn.textContent = 'Restart Game';
   nodes.dialog.append(gameOver, restartBtn);
   restartBtn.addEventListener('click', () => {
+    nodes.console.innerHTML = `Welcome to Battleship! <br> <br> Place your ships on the board and press the button below to start the game.`;
+    nodes.dialog.classList.remove('gameOver');
     nodes.dialog.innerHTML = '';
     nodes.dialog.close();
     initializer();
@@ -41,13 +46,14 @@ function initializer() {
   });
 
   nodes.startBtn.addEventListener('click', function startgame() {
-    nodes.startBtn.removeEventListener('click', startgame);
+    nodes.console.textContent = 'Click on the board below to launch your attack.';
     playerShips = getShips()[1];
     if (playerShips.length < 5) return;
+    nodes.startBtn.removeEventListener('click', startgame);
     gameBoard = new GameBoard(playerCells, computerCells, playerShips, computerShips);
     const compIcons = document.querySelectorAll('.computerCell');
     compIcons.forEach((icon) => {
-      icon.style.setProperty('--test', 'aquamarine');
+      icon.style.setProperty('--hover', '#82abab96');
       icon.onclick = attack;
   
       function attack(e) {

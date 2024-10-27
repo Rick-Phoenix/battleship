@@ -46,6 +46,7 @@ export function placeShip(element, type, location, cells) {
 
   element.onclick = dragShip;
   element.onmouseover = changeCursor;
+  element.onmouseout = changeInfo;
   let shipAngle = 0;
   let mouseX;
   let mouseY;
@@ -54,8 +55,13 @@ export function placeShip(element, type, location, cells) {
   shipImg.classList.add('gameIcon', type);
   shipImg.src = location;
 
+  function changeInfo (e) {
+    nodes.shipInfo.textContent = 'Your Ships';
+  }
+
   function changeCursor(e) {
     element.style.cursor = 'grab';
+    nodes.shipInfo.textContent = ship.name;
   }
 
   function rotateShip(e) {
@@ -84,7 +90,6 @@ export function placeShip(element, type, location, cells) {
     document.onmousemove = null;
     element.style.opacity = '0.5';
     element.onclick = null;
-    element.onmouseover = null;
     element.style.cursor = 'auto';
     document.onclick = null;
     document.onkeyup = null;
@@ -99,7 +104,7 @@ export function placeShip(element, type, location, cells) {
     nodes.dialog.showModal();
     nodes.dialog.focus();
     nodes.dialog.style.cursor = 'grabbing';
-    nodes.dialog.style.setProperty('--instructions', "'Press Q to rotate the ship'");
+    nodes.dialog.style.setProperty('--instructions', "'Press Q to rotate the ship, left click to place it'");
     shipImg.style.position = 'absolute';
     document.onkeyup = rotateShip;
   }
@@ -194,6 +199,8 @@ export function placeShip(element, type, location, cells) {
             cell.filled = true;
             cell.occupyingShip = ship;
             ship.place(targetCells);
+            cell.node.classList.remove('hover-effect');
+
           });
 
           const firstCell = targetCells[0];
@@ -204,7 +211,7 @@ export function placeShip(element, type, location, cells) {
             const freeSpaceX = areaLength - shipRect.width;
             const freeSpaceY = areaHeight - shipRect.height;
   
-            shipImg.style.left = `${(firstCell.left + freeSpaceX / 2 - boardRect.left)}px`
+            shipImg.style.left = `${(firstCell.left + freeSpaceX / 2 - boardRect.left + 20)}px`
             shipImg.style.top = `${(firstCell.top - boardRect.top + offsetTop + freeSpaceY / 2)}px`
   
           }
@@ -215,13 +222,14 @@ export function placeShip(element, type, location, cells) {
             const freeSpaceX = areaLength - shipRect.width;
             const freeSpaceY = areaHeight - shipRect.height;
   
-            shipImg.style.left = `${(firstCell.left + freeSpaceX / 2 - boardRect.left - offset)}px`
+            shipImg.style.left = `${(firstCell.left + freeSpaceX / 2 - boardRect.left - offset + 20)}px`
             shipImg.style.top = `${(firstCell.top - boardRect.top + offsetTop + freeSpaceY / 2 + offset)}px`
 
           }
 
           
           playerShipsList.push(ship);
+          if (playerShipsList.length === 5) nodes.startBtn.classList.remove('disabled');
           if (playerShipsList.length > 5) playerShipsList = [ship];
           closeDrag(targetCells);
         }

@@ -10,6 +10,7 @@ export class Ship {
       des: {name: 'Destroyer', length: 2},
     }
 
+    this.codeName = type;
     this.length = shipTable[type]['length'];
     this.name = shipTable[type]['name'];
     this.hits = 0;

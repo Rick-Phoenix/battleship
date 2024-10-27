@@ -7,3 +7,5 @@ export const dialog = document.querySelector('dialog');
 export const computerBoard = document.querySelector('div.computerBoard');
 export const startBtn = document.querySelector('button.start');
 export const turnBtn = document.querySelector('button.turn');
+export const shipInfo = document.querySelector('h3.shipInfo');
+export const console = document.querySelector('h3.console');
