@@ -19,6 +19,13 @@ main {
   flex-direction: column;
 }
 
+main::after {
+  content: 'Rick-Phoenix for The Odin Project 2024 | Icons by Freepik and dvjstock / Backgrounds by kdekiara and devogorin.';
+  position: absolute;
+  bottom: 5px;
+  font-size: 13px;
+}
+
 button.restart,
 button.start {
   background: #2e5e5c;
@@ -87,12 +94,16 @@ div.computerBoard {
 
 div.playerCell,
 div.computerCell {
-  border: 1px solid black;
+  border: 1px solid #899597;
   position: relative;
   background-color: transparent;
 }
 
 div.playerCell.hover-effect {
+  background-color: #82abab96;
+}
+
+div.playerCell.active {
   background-color: #82abab96;
 }
 
@@ -205,9 +216,10 @@ img.ship {
 }
 
 div.shipsRow {
-  background: #00fff526;
+  background: #00fff52b;
   border-radius: 5px 10px;
   padding: 10px;  
+  display: flex;
 }
 
 h3.shipInfo {
@@ -221,7 +233,20 @@ h3.console {
   padding: 10px;
 }
 
+div.ship {
+  height: 100px;
+  width: 100px;
+  position: relative;
+}
 
+img.sunkShip {
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0.5;
+}
 
 img.ship:hover {
   background-color: #7c797976;
@@ -285,4 +310,8 @@ img.gameIcon {
 
 button.restart {
   position: relative;
+}
+
+footer {
+  margin-top: 20px;
 }

@@ -1,4 +1,5 @@
 import { blastImgSource, computerShips, splashImgSource } from "./functions";
+import { console, shipInfo } from "./selectors";
 
 export class Ship {
   constructor(type, coordinates) {
@@ -68,6 +69,17 @@ export class GameBoard {
         attacker.hits = attacker.hits.filter((cell) => cell.occupyingShip.sunk === false);
         attacker.oppShips = attacker.oppShips.filter((ship) => ship !== targetShip)
         if (attacker.oppShips.length < 1) this.win(attacker.name);
+        if (player === 'computer') {
+          shipInfo.textContent = `${attacker.oppShips.length} ship${(() => attacker.oppShips.length === 1 ? '' : 's')()} remaining!`;
+          const shipDiv = document.querySelector(`div[data-type=${targetShip.codeName}]`);
+          const sunkIcon = new Image();
+          sunkIcon.src = blastImgSource;
+          sunkIcon.className = 'sunkShip';
+          shipDiv.append(sunkIcon);
+        }
+        if (player === 'player') {
+          console.textContent = `${attacker.oppShips.length} ship${(() => attacker.oppShips.length === 1 ? '' : 's')()} left!`;
+        }
       }
     }
     

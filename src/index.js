@@ -22,9 +22,14 @@ function gameOver() {
   nodes.dialog.append(gameOver, restartBtn);
   restartBtn.addEventListener('click', () => {
     nodes.console.innerHTML = `Welcome to Battleship! <br> <br> Place your ships on the board and press the button below to start the game.`;
+    nodes.shipInfo.textContent = 'Your Ships';
     nodes.dialog.classList.remove('gameOver');
-    nodes.dialog.innerHTML = '';
+    nodes.ships.forEach((div) => {
+      const sunkIcon = div.querySelector('img.sunkShip');
+      if (sunkIcon) sunkIcon.remove();
+    })
     nodes.dialog.close();
+    nodes.dialog.innerHTML = '';
     initializer();
   })
 }
@@ -47,8 +52,8 @@ function initializer() {
 
   nodes.startBtn.addEventListener('click', function startgame() {
     nodes.console.textContent = 'Click on the board below to launch your attack.';
+    nodes.shipInfo.textContent = 'Fight!';
     playerShips = getShips()[1];
-    if (playerShips.length < 5) return;
     nodes.startBtn.removeEventListener('click', startgame);
     gameBoard = new GameBoard(playerCells, computerCells, playerShips, computerShips);
     const compIcons = document.querySelectorAll('.computerCell');
